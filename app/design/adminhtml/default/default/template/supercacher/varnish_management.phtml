@@ -1,0 +1,91 @@
+<?php
+
+/**
+ * siteground.com SuperCacher Extension for Magento, based on Nexcess.net Turpentine Extension for Magento
+ * Copyright (C) 2013 SiteGround Inc.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
+
+?>
+<br />
+<div class="content-header">
+    <table cellspacing="0">
+        <tr>
+            <td>
+                <h3><?php echo Mage::helper( 'supercacher/data' )
+                        ->__('Varnish Management') ?></h3>
+            </td>
+            <td class="form-buttons"></td>
+         </tr>
+    </table>
+</div>
+<table class="form-list varnish-management">
+    <tr>
+        <td class="scope-label">
+            <button
+                onclick="setLocation('<?php echo $this->getFlushAllUrl()?>')"
+                type="button"
+                class="scalable save">
+                <span><?php echo Mage::helper( 'supercacher/data' )
+                        ->__('Flush SuperCacher cache') ?></span>
+            </button>
+        </td>
+        <td class="scope-label">
+            <?php echo Mage::helper( 'supercacher/data' )
+                ->__('Flush all SuperCacher cached items.')?>
+        </td>
+    </tr>
+    <?php if(Mage::helper( 'supercacher/varnish' )->isBypassEnabled() === false): ?>
+        <tr>
+            <td class="scope-label">
+                <button
+                    onclick="setLocation('<?php echo $this->getSwitchNavigationUrl( 'default' ); ?>')"
+                    type="button"
+                    class="scalable delete">
+                    <span><?php echo Mage::helper( 'supercacher/data' )
+                            ->__('Activate SuperCacher Bypass') ?></span>
+                </button>
+            </td>
+            <td class="scope-label">
+                <?php echo Mage::helper( 'supercacher/data' )
+                    ->__('Create a cookie to bypass SuperCacher only for your session.')?>
+            </td>
+        </tr>
+    <?php else: ?>
+        <tr>
+            <td class="scope-label">
+                <button
+                    onclick="setLocation('<?php echo $this->getSwitchNavigationUrl( 'varnish' ); ?>')"
+                    type="button"
+                    class="scalable back">
+                    <span><?php echo Mage::helper( 'supercacher/data' )
+                            ->__('Deactivate Varnish Bypass') ?></span>
+                </button>
+            </td>
+            <td class="scope-label">
+                <?php echo Mage::helper( 'supercacher/data' )
+                    ->__('Remove the bypass cookie and use again Varnish.')?>
+            </td>
+        </tr>
+    <?php endif; ?>
+</table>
+<?php echo $this->getChildHtml(); ?>
+
+<style>
+    .varnish-management button {
+        width: 220px;
+    }
+</style>

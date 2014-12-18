@@ -1,0 +1,308 @@
+<?xml version="1.0"?>
+<!--
+	siteground.com SuperCacher Extension for Magento, based on Nexcess.net Turpentine Extension for Magento
+	Copyright (C) 2013 SiteGround Inc.
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License along
+    with this program; if not, write to the Free Software Foundation, Inc.,
+    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+-->
+<config>
+    <modules>
+        <Siteground_SuperCacher>
+            <version>0.1.7</version>
+        </Siteground_SuperCacher>
+    </modules>
+    <default>
+        <supercacher_varnish>
+            <general>
+                <enable_varnish>1</enable_varnish>
+                <ajax_messages>1</ajax_messages>           
+                <fix_product_toolbar>0</fix_product_toolbar>              
+                <crawler_enable>0</crawler_enable>
+                <url_blacklist><![CDATA[cron.php]]></url_blacklist>
+            </general>
+        </supercacher_varnish>
+    </default>
+    <global>
+        <blocks>
+            <supercacher>
+                <class>Siteground_SuperCacher_Block</class>
+            </supercacher>    
+            <!--
+            <core>
+                <rewrite>
+                    <messages>Siteground_SuperCacher_Block_Core_Messages</messages>
+                </rewrite>
+            </core>
+            -->
+        </blocks>
+        <helpers>
+            <supercacher>
+                <class>Siteground_SuperCacher_Helper</class>
+            </supercacher>
+        </helpers>
+        <models>
+            <supercacher>
+                <class>Siteground_SuperCacher_Model</class>
+            </supercacher>
+        </models>
+        
+        <events>      
+            <http_response_send_before>
+                <observers>
+                    <supercacher_varnish_http_response_send_before>
+                        <class>supercacher/observer_varnish</class>
+                        <method>setCacheFlagHeader</method>
+                    </supercacher_varnish_http_response_send_before>
+                </observers>
+            </http_response_send_before>
+            
+            <admin_system_config_changed_section_supercacher_varnish>
+                <observers>
+                    <supercacher_varnish_admin_system_config_changed_section_supercacher_varnish>
+                        <class>supercacher/observer_varnish</class>
+                        <method>adminSystemConfigChangedSection</method>
+                    </supercacher_varnish_admin_system_config_changed_section_supercacher_varnish>
+                </observers>
+            </admin_system_config_changed_section_supercacher_varnish>          
+            
+            <core_block_abstract_to_html_before>
+                <observers>
+                    <supercacher_esi_core_block_abstract_to_html_before>
+                        <type>singleton</type>
+                        <class>supercacher/observer_esi</class>
+                        <method>injectEsi</method>
+                    </supercacher_esi_core_block_abstract_to_html_before>
+                </observers>
+            </core_block_abstract_to_html_before>
+            
+            <http_response_send_before>
+                <observers>
+                    <supercacher_esi_http_response_send_before>
+                        <class>supercacher/observer_esi</class>
+                        <method>setFlagHeaders</method>
+                    </supercacher_esi_http_response_send_before>
+                </observers>
+            </http_response_send_before>
+            
+            <controller_action_layout_generate_blocks_after>
+                <observers>
+                    <supercacher_esi_controller_action_layout_generate_blocks_after>
+                        <class>supercacher/observer_esi</class>
+                        <method>checkCacheFlag</method>
+                    </supercacher_esi_controller_action_layout_generate_blocks_after>
+                </observers>
+            </controller_action_layout_generate_blocks_after>
+            
+            <controller_response_redirect>
+                <observers>
+                    <supercacher_esi_controller_response_redirect>
+                        <class>supercacher/observer_esi</class>
+                        <method>checkRedirectUrl</method>
+                    </supercacher_esi_controller_response_redirect>
+                </observers>
+            </controller_response_redirect>
+            
+            <controller_front_init_before>
+                <observers>
+                    <supercacher_esi_controller_front_init_before>
+                        <class>supercacher/observer_esi</class>
+                        <method>loadCacheClearEvents</method>
+                    </supercacher_esi_controller_front_init_before>
+                    <supercacher_esi_controller_front_init_before2>
+                        <class>supercacher/observer_esi</class>
+                        <method>addMessagesBlockRewrite</method>
+                    </supercacher_esi_controller_front_init_before2>
+                    <supercacher_varnish_controller_front_init_before>
+                        <class>supercacher/observer_varnish</class>
+                        <method>addBlockRewrites</method>
+                    </supercacher_varnish_controller_front_init_before>
+                </observers>
+            </controller_front_init_before>
+
+            <catalog_product_save_commit_after>
+                <observers>
+                    <supercacher_varnish_catalog_product_save_commit_after>
+                        <class>supercacher/observer_ban</class>
+                        <method>banProductPageCache</method>
+                    </supercacher_varnish_catalog_product_save_commit_after>
+                </observers>
+            </catalog_product_save_commit_after>
+            
+            <model_delete_commit_after>
+                <observers>
+                    <supercacher_varnish_review_delete_after>
+                        <class>supercacher/observer_ban</class>
+                        <method>banReviewDelete</method>
+                    </supercacher_varnish_review_delete_after>
+                </observers>
+            </model_delete_commit_after>
+            
+            
+           	<model_save_after>
+                <observers>
+                    <supercacher_varnish_poll_save_after>
+                        <class>supercacher/observer_ban</class>
+                        <method>banPoll</method>
+                    </supercacher_varnish_poll_save_after>
+                </observers>
+            </model_save_after>
+            
+            <review_save_after>
+                <observers>
+                    <supercacher_varnish_review_save_after>
+                        <class>supercacher/observer_ban</class>
+                        <method>banProductReview</method>
+                    </supercacher_varnish_review_save_after>
+                </observers>
+            </review_save_after>
+            
+            <cataloginventory_stock_item_save_after>
+                <observers>
+                    <supercacher_varnish_cataloginventory_stock_item_save_after>
+                        <class>supercacher/observer_ban</class>
+                        <method>banProductPageCacheCheckStock</method>
+                    </supercacher_varnish_cataloginventory_stock_item_save_after>
+                </observers>
+             </cataloginventory_stock_item_save_after>
+             
+            <catalog_category_save_commit_after>
+                <observers>
+                    <supercacher_varnish_catalog_category_save_commit_after>
+                        <class>supercacher/observer_ban</class>
+                        <method>banCategoryCache</method>
+                    </supercacher_varnish_catalog_category_save_commit_after>
+                </observers>
+            </catalog_category_save_commit_after>
+            
+            <cms_page_save_commit_after>
+                <observers>
+                    <supercacher_varnish_cms_page_save_commit_after>
+                        <class>supercacher/observer_ban</class>
+                        <method>banCmsPageCache</method>
+                    </supercacher_varnish_cms_page_save_commit_after>
+                </observers>
+            </cms_page_save_commit_after>
+            
+            <adminhtml_cache_flush_system>
+                <observers>
+                    <supercacher_varnish_adminhtml_cache_flush_system>
+                        <class>supercacher/observer_ban</class>
+                        <method>banAllCache</method>
+                    </supercacher_varnish_adminhtml_cache_flush_system>
+                </observers>
+            </adminhtml_cache_flush_system>
+            
+            <adminhtml_cache_flush_all>
+                <observers>
+                    <supercacher_varnish_adminhtml_cache_flush_all>
+                        <class>supercacher/observer_ban</class>
+                        <method>banAllCache</method>
+                    </supercacher_varnish_adminhtml_cache_flush_all>
+                </observers>
+            </adminhtml_cache_flush_all>
+            
+            <adminhtml_cache_refresh_type>
+                <observers>
+                    <supercacher_varnish_adminhtml_cache_refresh_type>
+                        <class>supercacher/observer_ban</class>
+                        <method>banCacheType</method>
+                    </supercacher_varnish_adminhtml_cache_refresh_type>
+                </observers>
+            </adminhtml_cache_refresh_type>
+            
+            <!-- Cron/Crawler events -->
+            <supercacher_ban_all_cache>
+                <observers>
+                    <supercacher_cron_supercacher_ban_all_cache>
+                        <class>supercacher/observer_cron</class>
+                        <method>queueAllUrls</method>
+                    </supercacher_cron_supercacher_ban_all_cache>
+                </observers>
+            </supercacher_ban_all_cache>
+        </events>
+    </global>
+    <frontend>
+        <routers>
+            <supercacher>
+                <use>standard</use>
+                <args>
+                    <module>Siteground_SuperCacher</module>
+                    <frontName>supercacher</frontName>
+                </args>
+            </supercacher>
+        </routers>
+        <layout>
+            <updates>
+                <supercacher_esi module="supercacher">
+                    <file>supercacher_esi.xml</file>
+                </supercacher_esi>
+            </updates>
+        </layout>
+    </frontend>
+    <admin>
+        <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <supercacher after="Mage_Adminhtml">Siteground_SuperCacher</supercacher>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
+    </admin>
+    <adminhtml>
+        <layout>
+            <updates>
+                <supercacher module="supercacher">
+                    <file>supercacher.xml</file>
+                </supercacher>
+            </updates>
+        </layout>
+        <acl>
+            <resources>
+                <admin>
+                    <children>
+                        <system>
+                            <children>
+                                <supercacher translate="title" module="supercacher">
+                                    <title>SuperCacher Management</title>
+                                </supercacher>
+                                <config>
+                                    <children>
+                                        <supercacher_varnish translate="title" module="supercacher">
+                                            <title>SuperCacher Options</title>
+                                        </supercacher_varnish>
+                                    </children>
+                                </config>
+                            </children>
+                        </system>
+                    </children>
+                </admin>
+            </resources>
+        </acl>
+    </adminhtml>
+    <crontab>
+        <jobs>
+            <supercacher_crawl_urls>
+                <schedule>
+                    <cron_expr>0,10,20,30,40,50 * * * *</cron_expr>
+                </schedule>
+                <run>
+                    <model>supercacher/observer_cron::crawlUrls</model>
+                </run>
+            </supercacher_crawl_urls>
+        </jobs>
+    </crontab>
+</config>
