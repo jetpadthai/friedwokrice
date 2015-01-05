@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+
+<config>
+	<modules>
+		<Junaidbhura_Mandrill>
+			<version>1.0.4</version>
+		</Junaidbhura_Mandrill>
+	</modules>
+	
+	<global>
+		<helpers>
+			<mandrill>
+				<class>Junaidbhura_Mandrill_Helper</class>
+			</mandrill>
+		</helpers>
+		
+		<models>
+			<mandrill>
+				<class>Junaidbhura_Mandrill_Model</class>
+			</mandrill>
+			<core>
+				<rewrite>
+					<email_template>Junaidbhura_Mandrill_Model_Email_Template</email_template>
+				</rewrite>
+			</core>
+		</models>
+	</global>
+	
+	<default>
+		<mandrill>
+			<mandrill>
+				<active>0</active>
+				<api_key></api_key>
+				<from_name></from_name>
+				<from_email></from_email>
+			</mandrill>
+		</mandrill>
+	</default>
+	
+	<adminhtml>
+		<layout>
+			<updates>
+				<mandrill>
+					<file>mandrill.xml</file>
+				</mandrill>
+			</updates>
+		</layout>
+		<acl>
+			<resources>
+				<admin>
+					<children>
+						<system>
+							<children>
+								<config>
+									<children>
+										<mandrill translate="title" module="mandrill">
+											<title>Mandrill Transactional Emails</title>
+										</mandrill>
+									</children>
+								</config>
+							</children>
+						</system>
+					</children>
+				</admin>
+			</resources>
+		</acl>
+	</adminhtml>
+
+</config>

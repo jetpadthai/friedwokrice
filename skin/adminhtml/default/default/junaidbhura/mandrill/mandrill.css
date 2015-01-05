@@ -1,0 +1,10 @@
+ul.tabs a.mandrill {
+	border-bottom:1px dotted;
+}
+ul.tabs a.mandrill span,
+ul.tabs a.mandrill:hover span {
+	background-image:url(mandrill-icon.png) !important;
+	background-repeat:no-repeat;
+	background-position:18px center;
+	padding-left:40px;
+}
